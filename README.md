@@ -8,6 +8,10 @@ crafty study
 + Floor
 + Gravity
 + Fourway (上下左右)
++ Twoway
++ Multiway
++ Jumper
++ Inertia (惯性)
 + Mouse
 + Keyboard
 

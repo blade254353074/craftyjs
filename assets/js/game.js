@@ -1,84 +1,73 @@
 (function () {
-  // init
-  var stage = Crafty.init(800, 800, document.querySelector('#game'));
 
-  /*  // add a fourway entity
-    Crafty.e('2D, Canvas, Color, Fourway').attr({
-      x: 0,
-      y: 0,
-      w: 100,
-      h: 100
-    }).color('green').fourway(4);*/
+  var stage = new createjs.Stage('game');
+  stage.enableMouseOver();
 
-  // add a floor
-  var floor = Crafty.e('Floor, 2D, Canvas, Color').attr({
-    x: 0,
-    y: 790,
-    w: 800,
-    h: 10
-  }).color('red');
+  var circle = new createjs.Shape();
+  circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 50);
+  circle.x = 50;
+  circle.y = 50;
+  stage.addChild(circle);
 
-  floor.bind("ChangeColor", function (eventData) {
-    this.color(eventData.color);
-  });
-
-  // add a gravity entity
-  var box = Crafty.e('2D, Canvas, Color, Fourway, Gravity, Mouse')
-    .attr({
-      x: 300,
-      y: 0,
-      w: 50,
-      h: 50
-    })
-    .color('blue')
-    .fourway(4)
-    .gravity('Floor');
+  stage.update();
 
 
-  box.bind('Click', function (eventData) {
-    floor.trigger('ChangeColor', {
-      color: 'blue'
-    });
-    console.dir(eventData);
-  });
+  function Button(label, color) {
+    this.Container_constructor();
 
-/*  box.bind("EnterFrame", function (eventData) {
-    this.x = this.x + 100 * (eventData.dt / 1000);
-  });
+    this.label = label;
+    this.color = color;
 
-  box.bind("Move", function (oldPosition) {
-    console.log(oldPosition._x, this.x);
-  });*/
+    this.setup();
+  }
+  var p = createjs.extend(Button, createjs.Container);
 
-  // Define two entities at x=5 and x=10
-  var varrick = Crafty.e("2D, Canvas, Color").attr({
-    x: 0,
-    y: 0,
-    w: 50,
-    h: 50
-  })
-  .color('blue');
-  var xhuli = Crafty.e("2D, Canvas, Color").attr({
-    x: 0,
-    y: 0,
-    w: 50,
-    h: 50
-  })
-  .color('yellow');
+  p.setup = function () {
+    var text = new createjs.Text(this.label, "20px Arial", "#000");
+    text.textBaseline = "top";
+    text.textAlign = "center";
 
-  // Bind to an event called "Thing"
-  varrick.bind("Thing", function () {
-    this.x += 20;
-  });
-  xhuli.bind("Thing", function () {
-    this.x += 20;
-  });
+    var width = text.getMeasuredWidth() + 30;
+    var height = text.getMeasuredHeight() + 20;
 
-  // Do the Thing!
-  // varrick and xhuli will *both* move to the right
-  Crafty.trigger("Thing");
+    text.x = width / 2;
+    text.y = 10;
 
-  // You can still trigger the same events directly on an entity
-  xhuli.trigger("Thing");
+    var background = new createjs.Shape();
+    background.graphics.beginFill(this.color).drawRoundRect(0, 0, width, height, 10);
 
+    this.addChild(background, text);
+    this.on("click", this.handleClick);
+    this.on("rollover", this.handleRollOver);
+    this.on("rollout", this.handleRollOver);
+    this.cursor = "pointer";
+
+    this.mouseChildren = false;
+
+    this.offset = Math.random() * 10;
+    this.count = 0;
+  };
+
+  p.handleClick = function (event) {
+    console.log("You clicked on a button: " + this.label);
+  };
+
+  p.handleRollOver = function (event) {
+    this.alpha = event.type == "rollover" ? 0.4 : 1;
+  };
+
+  window.Button = createjs.promote(Button, "Container");
+
+  var btn1 = stage.addChild(new Button("Hello!", "#F00"));
+  btn1.y = 20;
+
+  var btn2 = stage.addChild(new Button("Goodbye.", "#0F0"));
+  btn2.y = btn1.y + 50;
+
+  var btn3 = stage.addChild(new Button("Hello again!!", "#0FF"));
+  btn3.y = btn2.y + 50;
+
+  btn1.x = btn2.x = btn3.x = 20;
+
+  createjs.Ticker.on("tick", stage);
 }());
