@@ -36,10 +36,10 @@
   - tick
 
 
-## [Button.js](blob/master/assets/js/button.js)
+## [Button.js](assets/js/button.js)
 
 Bootstrap like Button in Canvas
 
-![Chrome](blob/master/assets/imgs/button.gif)
-![Safari](blob/master/assets/imgs/button1.gif)
-![FireFox](blob/master/assets/imgs/button2.gif)
+![Chrome](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/button.gif)
+![Safari](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/button1.gif)
+![FireFox](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/button2.gif)
