@@ -40,6 +40,6 @@
 
 Bootstrap like Button in Canvas
 
-![Chrome](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/button.gif)
-![Safari](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/button1.gif)
-![FireFox](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/button2.gif)
+![Chrome](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/buttonChrome.gif)
+![Safari](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/buttonSafari.gif)
+![FireFox](https://raw.githubusercontent.com/blade254353074/craftyjs/master/assets/imgs/buttonFF.gif)
