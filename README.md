@@ -1,4 +1,4 @@
-# Creates
+# Create.js
 
 ## DisplayObject
 + ChildClass
@@ -34,3 +34,12 @@
   - rollout
   - rollover
   - tick
+
+
+## [Button.js](blob/master/assets/js/button.js)
+
+Bootstrap like Button in Canvas
+
+![Chrome](blob/master/assets/imgs/button.gif)
+![Safari](blob/master/assets/imgs/button1.gif)
+![FireFox](blob/master/assets/imgs/button2.gif)
