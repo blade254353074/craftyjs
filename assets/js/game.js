@@ -1,73 +1,56 @@
 (function () {
 
-  var stage = new createjs.Stage('game');
-  stage.enableMouseOver();
+  window.onload = function () {
+    var isRetina = window.devicePixelRatio > 1;
 
-  var circle = new createjs.Shape();
-  circle.graphics.beginFill('DeepSkyBlue').drawCircle(0, 0, 50);
-  circle.x = 50;
-  circle.y = 50;
-  stage.addChild(circle);
+    var stage = new createjs.Stage("game");
+    stage.enableMouseOver();
 
-  stage.update();
+    var text = new createjs.Text('雷电法王', 'Bold 40px \'Wyue-GutiFangsong-NC\'', '#f40');
+    text.outline = 1;
+    text.x = 100;
+    text.y = 100;
+
+    var hit = new createjs.Shape();
+    hit.graphics.beginFill('#000').drawRect(0, 0, text.getMeasuredWidth(), text.getMeasuredHeight());
+    text.hitArea = hit;
+    // stage.addChild(text);
+
+    text.on('mouseover', handleMouseover);
+
+    text.on('mouseout', handleMouseover);
+
+    function handleMouseover(e) {
+      e.target.alpha = e.type === 'mouseover' ? 0.7 : 1;
+    }
+
+    var btnDefult = new Button('Defult', 'defult');
+    btnDefult.set({ x: 20, y: 20 });
+    var btnPrimary = new Button('Primary', 'primary');
+    btnPrimary.set({ x: 20, y: 60 });
+    var btnSuccess = new Button('Success', 'success');
+    btnSuccess.set({ x: 20, y: 100 });
+    var btnInfo = new Button('Info', 'info');
+    btnInfo.set({ x: 20, y: 140 });
+    var btnWarning = new Button('Warning', 'warning');
+    btnWarning.set({ x: 20, y: 180 });
+    var btnDanger = new Button('Danger', 'danger');
+    btnDanger.set({ x: 20, y: 220 });
+
+    stage.addChild(btnDefult, btnPrimary, btnSuccess, btnInfo, btnWarning, btnDanger);
 
 
-  function Button(label, color) {
-    this.Container_constructor();
 
-    this.label = label;
-    this.color = color;
+    // tick 广播
+    createjs.Ticker.setFPS(60);
+    // 利用Ticker类 自动更新stage
+    createjs.Ticker.addEventListener("tick", stage);
 
-    this.setup();
-  }
-  var p = createjs.extend(Button, createjs.Container);
+    createjs.Sound.registerSound('assets/thunder.mp3', 'Thunder');
 
-  p.setup = function () {
-    var text = new createjs.Text(this.label, "20px Arial", "#000");
-    text.textBaseline = "top";
-    text.textAlign = "center";
-
-    var width = text.getMeasuredWidth() + 30;
-    var height = text.getMeasuredHeight() + 20;
-
-    text.x = width / 2;
-    text.y = 10;
-
-    var background = new createjs.Shape();
-    background.graphics.beginFill(this.color).drawRoundRect(0, 0, width, height, 10);
-
-    this.addChild(background, text);
-    this.on("click", this.handleClick);
-    this.on("rollover", this.handleRollOver);
-    this.on("rollout", this.handleRollOver);
-    this.cursor = "pointer";
-
-    this.mouseChildren = false;
-
-    this.offset = Math.random() * 10;
-    this.count = 0;
+    text.addEventListener('click', function () {
+      createjs.Sound.play('Thunder');
+    });
   };
 
-  p.handleClick = function (event) {
-    console.log("You clicked on a button: " + this.label);
-  };
-
-  p.handleRollOver = function (event) {
-    this.alpha = event.type == "rollover" ? 0.4 : 1;
-  };
-
-  window.Button = createjs.promote(Button, "Container");
-
-  var btn1 = stage.addChild(new Button("Hello!", "#F00"));
-  btn1.y = 20;
-
-  var btn2 = stage.addChild(new Button("Goodbye.", "#0F0"));
-  btn2.y = btn1.y + 50;
-
-  var btn3 = stage.addChild(new Button("Hello again!!", "#0FF"));
-  btn3.y = btn2.y + 50;
-
-  btn1.x = btn2.x = btn3.x = 20;
-
-  createjs.Ticker.on("tick", stage);
 }());
