@@ -1,4 +1,4 @@
-function Button(text, btnType) {
+function Button(content, btnOption, btnSize) {
   var backgroundColor;
   var backgroundColorHover;
   var backgroundColorActive;
@@ -7,14 +7,57 @@ function Button(text, btnType) {
   var borderColorActive;
   var color = '#fff';
 
-  var fontSize = 14;
+  var fontSize;
+  var lineHeight;
+  var borderRadius;
+  var paddingTop;
+  var paddingLeft;
   var fontFamily = 'Lato,\'Helvetica Neue\',Arial,Helvetica,sans-serif';
-  var lineHeight = 1.42857143;
-  var borderRadius = 4;
-  var paddingTop = 6;
-  var paddingLeft = 12;
 
-  switch (btnType) {
+  var label;
+  var labelWidth;
+  var btnWidth;
+  var btnHeight;
+  var background;
+  var hit;
+  var button;
+  var _lastMouseEvent = null;
+  var _pressed = false;
+
+  // 设定按钮大小
+  switch (btnSize) {
+  case 'lg':
+    fontSize = 18;
+    lineHeight = 1.3333333;
+    borderRadius = 6;
+    paddingTop = 10;
+    paddingLeft = 16;
+    break;
+  case 'sm':
+    fontSize = 12;
+    lineHeight = 1.5;
+    borderRadius = 3;
+    paddingTop = 5;
+    paddingLeft = 10;
+    break;
+  case 'xs':
+    fontSize = 12;
+    lineHeight = 1.5;
+    borderRadius = 3;
+    paddingTop = 1;
+    paddingLeft = 5;
+    break;
+  default:
+    fontSize = 14;
+    lineHeight = 1.42857143;
+    borderRadius = 4;
+    paddingTop = 6;
+    paddingLeft = 12;
+    break;
+  }
+
+  // 设定按钮类型
+  switch (btnOption) {
   case 'primary':
     backgroundColor = '#337ab7';
     backgroundColorHover = '#286090';
@@ -66,21 +109,26 @@ function Button(text, btnType) {
     break;
   }
 
-  var label = new createjs.Text(text, fontSize + 'px ' + fontFamily, color);
-  label.name = text;
+  // 创建按钮文字
+  if (!content) content = 'button';
+  label = new createjs.Text(content, fontSize + 'px ' + fontFamily, color);
+  label.name = content;
   label.lineHeight = lineHeight;
   label.textAlign = 'center';
   label.textBaseline = 'middle';
-  var labelWidth = label.getMeasuredWidth();
-  var btnWidth = labelWidth + paddingLeft * 2;
-  var btnHeight = fontSize * lineHeight + paddingTop * 2;
 
+  // 计算按钮长宽
+  labelWidth = label.getMeasuredWidth();
+  btnWidth = labelWidth + paddingLeft * 2;
+  btnHeight = fontSize * lineHeight + paddingTop * 2;
+
+  // 设置文字坐标
   label.x = btnWidth / 2;
   label.y = btnHeight / 2;
 
-  var background = new createjs.Shape();
+  // 创建按钮背景
+  background = new createjs.Shape();
   background.name = 'background';
-  //background.cursor = 'pointer';
   background.graphics
     .setStrokeStyle(0)
     .beginStroke(borderColor)
@@ -90,15 +138,14 @@ function Button(text, btnType) {
       btnHeight,
       borderRadius);
 
-
-  var button = new createjs.Container();
+  // 创建按钮Container
+  button = new createjs.Container();
   button.cursor = 'pointer';
   button.name = 'button';
   button.addChild(background, label);
 
-  var bounds = button.getBounds();
-
-  var hit = new createjs.Shape();
+  // 创建按钮hitArea
+  hit = new createjs.Shape();
   hit.graphics.beginFill('#000').drawRect(0, 0, btnWidth, btnHeight);
   button.hitArea = hit;
 
@@ -108,22 +155,49 @@ function Button(text, btnType) {
   // :active
   button.on('mousedown', handleMouse);
   button.on('pressup', handleMouse);
+  // out over down out
+  // out over down pressup
+  // over down out over
 
+  function buttonNormal() {
+    background.graphics.clear()
+      .setStrokeStyle(0)
+      .beginStroke(borderColor)
+      .beginFill(backgroundColor)
+      .drawRoundRect(0, 0,
+        btnWidth,
+        btnHeight,
+        borderRadius);
+  }
+  function buttonHover() {
+    background.graphics.clear()
+      .setStrokeStyle(0)
+      .beginStroke(borderColorHover)
+      .beginFill(backgroundColorHover)
+      .drawRoundRect(0, 0,
+        btnWidth,
+        btnHeight,
+        borderRadius);
+  }
 
   function handleMouse(e) {
     switch (e.type) {
     case 'mouseover':
+      if (_lastMouseEvent === 'mouseout' && _pressed) {
+        break;
+      }
+      buttonHover();
+      break;
     case 'pressup':
-      background.graphics.clear()
-        .setStrokeStyle(0)
-        .beginStroke(borderColorHover)
-        .beginFill(backgroundColorHover)
-        .drawRoundRect(0, 0,
-          btnWidth,
-          btnHeight,
-          borderRadius);
+      if (_lastMouseEvent === 'mouseout') {
+        buttonNormal();
+      } else {
+        buttonHover();
+      }
+      _pressed = false;
       break;
     case 'mousedown':
+      _pressed = true;
       background.graphics.clear()
         .setStrokeStyle(0)
         .beginStroke(borderColorActive)
@@ -134,18 +208,13 @@ function Button(text, btnType) {
           borderRadius);
       break;
     default:
-      background.graphics.clear()
-        .setStrokeStyle(0)
-        .beginStroke(borderColor)
-        .beginFill(backgroundColor)
-        .drawRoundRect(0, 0,
-          btnWidth,
-          btnHeight,
-          borderRadius);
+      if (_lastMouseEvent === 'mousedown') break;
+      if (_pressed) break;
+      buttonNormal();
       break;
     }
+    _lastMouseEvent = e.type;
   }
-
 
   return button;
 }

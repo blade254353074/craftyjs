@@ -1,4 +1,4 @@
-# Create.js
+# Createjs
 
 ## DisplayObject
 + ChildClass
