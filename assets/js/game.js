@@ -25,17 +25,35 @@
     }
 
     var btnDefult = new Button('雷电法王', 'defult', 'lg');
-    btnDefult.set({ x: 20, y: 20 });
+    btnDefult.set({
+      x: 20,
+      y: 20
+    });
     var btnPrimary = new Button('雷电法王', 'primary');
-    btnPrimary.set({ x: 20, y: 70 });
+    btnPrimary.set({
+      x: 20,
+      y: 70
+    });
     var btnSuccess = new Button('雷电法王', 'success', 'sm');
-    btnSuccess.set({ x: 20, y: 110 });
+    btnSuccess.set({
+      x: 20,
+      y: 110
+    });
     var btnInfo = new Button('雷电法王', 'info', 'xs');
-    btnInfo.set({ x: 20, y: 150 });
+    btnInfo.set({
+      x: 20,
+      y: 150
+    });
     var btnWarning = new Button('雷电法王', 'warning');
-    btnWarning.set({ x: 20, y: 180 });
+    btnWarning.set({
+      x: 20,
+      y: 180
+    });
     var btnDanger = new Button('雷电法王', 'danger');
-    btnDanger.set({ x: 20, y: 220 });
+    btnDanger.set({
+      x: 20,
+      y: 220
+    });
 
     stage.addChild(btnDefult, btnPrimary, btnSuccess, btnInfo, btnWarning, btnDanger);
 

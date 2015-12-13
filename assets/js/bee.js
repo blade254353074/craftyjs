@@ -162,15 +162,15 @@ function load() {
   // 初始化敌方战机
   function setupInvaders() {
     // Radiant
-    ivd1 = new ShadowObject('ivd1', '#00F500');
+    var ivd1 = new ShadowObject('ivd1', '#00F500');
     ivd1.x = 50;
     ivd1.y = 52;
 
-    ivd2 = new ShadowObject('ivd2', '#FF00FF');
+    var ivd2 = new ShadowObject('ivd2', '#FF00FF');
     ivd2.x = 120;
     ivd2.y = 50;
 
-    ivd3 = new ShadowObject('ivd3', '#FDFF00');
+    var ivd3 = new ShadowObject('ivd3', '#FDFF00');
     ivd3.x = 185;
     ivd3.y = 50;
     // console.log(ivd3.shadow.blur);
