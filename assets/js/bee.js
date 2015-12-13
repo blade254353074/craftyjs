@@ -49,20 +49,24 @@ function load() {
   }, {
     id: 'ivd3',
     src: 'assets/imgs/ivd_FDFF00.png'
+  }, {
+    id: 'invaderSprite',
+    src: 'assets/imgs/invaderSprite.png'
   }];
 
+  var invaderData;
 
   (function loadAssets() {
     preload = new createjs.LoadQueue();
-    preload.addEventListener('complete', setup);
+    preload.addEventListener('complete', setup.bind(preload));
     preload.loadManifest(manifest);
   }());
 
   // game setup
-  function setup() {
+  function setup(e) {
     drawBackground();
     setupShip();
-    setupInvaders();
+    setupInvaders(preload.getResult('invaderSprite'));
 
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
@@ -161,10 +165,33 @@ function load() {
 
   // 初始化敌方战机
   function setupInvaders() {
+    invaderData = {
+      images: [preload.getResult('invaderSprite')],
+      frames: [
+        // x, y, width, height, imageIndex*, regX*, regY*
+        [0, 0, 40, 24],
+        [50, 0, 44, 27],
+        [150, 0, 38, 26],
+        [200, 0, 32, 25]
+      ]
+    };
+
+    var invaderSpriteSheet = new createjs.SpriteSheet(invaderData);
+    console.log(invaderSpriteSheet);
+    var instance = new createjs.Sprite(invaderSpriteSheet);
+    console.log(instance);
+    stage.addChild(instance);
+    // instance.shadow = new createjs.Shadow('#00F500', 0, 0, blur);
+    instance.gotoAndStop(2);
+    var img1 = invaderSpriteSheet.getFrame(0);
+    var object = new createjs.Bitmap(img1.image);
+    object.setBounds(50, 0, 40, 24);
+    object.x = 100;
+    stage.addChild(object);
     // Radiant
     var ivd1 = new ShadowObject('ivd1', '#00F500');
     ivd1.x = 50;
-    ivd1.y = 52;
+    ivd1.y = 50;
 
     var ivd2 = new ShadowObject('ivd2', '#FF00FF');
     ivd2.x = 120;
