@@ -1,3 +1,14 @@
+/**
+ * Create Bootstrap like Button in Canvas using createjs
+ * stage must enableMouseOver:
+ * stage.enableMouseOver();
+ * Usage:
+ * new Button('Button', 'defult', 'lg');
+ *
+ * @param {String} content   Button cotent text
+ * @param {String} btnOption primary success info warning danger default
+ * @param {String} btnSize   lg sm xs or empty
+ */
 function Button(content, btnOption, btnSize) {
   var backgroundColor;
   var backgroundColorHover;

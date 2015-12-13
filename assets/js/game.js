@@ -6,15 +6,15 @@
     var stage = new createjs.Stage("game");
     stage.enableMouseOver();
 
-    var text = new createjs.Text('雷电法王', 'Bold 40px \'Wyue-GutiFangsong-NC\'', '#f40');
-    text.outline = 1;
+    var text = new createjs.Text('\ue021', '40px icon', '#f40');
+    // text.outline = 1;
     text.x = 100;
     text.y = 100;
 
     var hit = new createjs.Shape();
     hit.graphics.beginFill('#000').drawRect(0, 0, text.getMeasuredWidth(), text.getMeasuredHeight());
     text.hitArea = hit;
-    // stage.addChild(text);
+    stage.addChild(text);
 
     text.on('mouseover', handleMouseover);
 
@@ -48,9 +48,9 @@
 
     createjs.Sound.registerSound('assets/thunder.mp3', 'Thunder');
 
-    text.addEventListener('click', function () {
-      createjs.Sound.play('Thunder');
-    });
+    // text.addEventListener('click', function () {
+    //   createjs.Sound.play('Thunder');
+    // });
   };
 
 }());
