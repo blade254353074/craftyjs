@@ -5,6 +5,16 @@ function setupInvaders(invadersImage) {
   var waveMap = [];
   var runTime = 0;
 
+  function makeShadow(invader, width, height, color) {
+    var avgSize = (width + height) / 2;
+    var blur = avgSize - avgSize / 5.6;
+    //console.log(invader.id, width, height, avgSize, avgSize / 4, blur);
+    // 设定阴影
+    invader.shadow = new createjs.Shadow(color, 0, 0, blur);
+
+    return invader;
+  }
+
   sheetMap.invader1 = {
     sheet: new createjs.SpriteSheet({
       images: [invadersImage],
@@ -19,6 +29,7 @@ function setupInvaders(invadersImage) {
     create: function () {
       var invader = new createjs.Sprite(this.sheet, 'move');
       // TODO: Add Shadow
+      makeShadow(invader, this.width, this.height, this.color);
       return invader;
     },
     handleHit: function (invaderObj, isHit) {
@@ -79,7 +90,7 @@ function setupInvaders(invadersImage) {
         if (self.setWave()) {
           self.handleWave();
         }
-        self._numInvader && self.handleFramerate();
+        if (self._numInvader) self.handleFramerate();
       },
       setWave: function () {
         var self = this;
@@ -95,28 +106,28 @@ function setupInvaders(invadersImage) {
           // true: 立即,开始下一轮;
           // false: 清屏后,开始下一轮;
           // time: 当前播放完后指定时间后,开始下一轮
-          nextStart = curWave.nextWave;
-          if (nextStart === true) {
-            nextStart = 0;
-          } else if (nextStart === false) {
-            nextStart = self._numInvader ? now : 0;
-          } else {
-            // 将NaN, null, undefined, Infinity转为0
-            nextStart = ~~nextStart;
-          }
-          if (now - curWave.startTime < nextStart) {
-            return;
-          }
+          return false;
+          // nextStart = curWave.nextWave;
+          // if (nextStart === true) {
+          //   nextStart = 0;
+          // } else if (nextStart === false) {
+          //   nextStart = self._numInvader ? now : 0;
+          // } else {
+          //   // 将NaN, null, undefined, Infinity转为0
+          //   nextStart = ~~nextStart;
+          // }
+          // if (now - curWave.startTime < nextStart) {
+          //   return;
+          // }
         }
         waveMap = self._waveMap.shift();
         //当没有下一轮,并且页面上也没有任何敌机的时候,游戏结束
-        console.log(waveMap, self._numInvader);
+        // console.log(waveMap, self._numInvader);
         if (!waveMap && !self._numInvader) {
           self.gameover();
           return;
         }
         invaders = waveMap.invaders;
-        console.log(invaders);
         self._curWave = {
           startTime: now,
           nextWave: waveMap.nextWave,
@@ -135,31 +146,59 @@ function setupInvaders(invadersImage) {
         if (!(curWave && curWave.compCount)) return;
         var curDate = +new Date();
         var invaders = curWave.invaders;
-        invaders.forEach(function (ivdInfo) {
+        
+        invaders.forEach(function (invaderInfo) {
           // 生成敌机
+          var data = invaderInfo._data;
+          console.log(invaderInfo);
+          var proMax = invaderInfo.number;
+          if (data.complete || !proMax) return;
+          var produce = data.produce || 0;
+          var delay;
+          var prevTime;
+          data.prevTime = curDate;
+          data.produce = produce;
+          for (var i = 0; i < proMax; i++) {
+            self.makeInvader(invaderInfo, i);
+            if (++produce >= proMax) {
+              data.complete = true;
+              curWave.compCount--;
+            }
+          }
         });
       },
-      makeInvader: function (invader) {
+      makeInvader: function (invaderInfo, index) {
         var self = this;
         var id;
-        // var container = self.container;
-        var name = invader.name;
+        var container = self.container;
+        var name = invaderInfo.name;
         var sheetMap = self._sheetMap[name];
         var invaderSprite = sheetMap.create();
 
         invaderSprite._data = {
           isHit: 0,
-          position: invader.position
+          position: invaderInfo.position
         };
+        invaderSprite.x = (sheetMap.width + 20) * index;
         // self.setAnimate(invaderSprite, sheetMap);
         id = invaderSprite.id = 'ivd_' + invaderSprite.id;
         invaderSprite.name = name;
         self.collideMap[id] = invaderSprite;
         // 添加事件
         invaderSprite.on('hit', self.eventHit, self);
+        //添加到集合中,维护敌机数量
         container.addChild(invaderSprite);
         self._numInvader++;
         container = sheetMap = invaderSprite = null;
+      },
+      setAnimate: function (invaderSprite, sheet) {
+        var self = this;
+        var data = invaderSprite._data;
+        var target = {};
+        var speed;
+        if (data.position === false) {
+          //invaderSprite.x = Math.random()
+        }
       },
       eventHit: function (event) {
         var invader = event.target;
@@ -180,7 +219,7 @@ function setupInvaders(invadersImage) {
         delete this.collideMap[invader.id];
       },
       handleFramerate: function () {
-        console.log(this.collideMap);
+        //console.log(this.collideMap);
       }
     };
     return IC;
@@ -222,7 +261,7 @@ function setupInvaders(invadersImage) {
       if (obj.hasOwnProperty(n)) {
         tag[n] = obj[n];
       }
-      return tag;
     }
+    return tag;
   }
 }
