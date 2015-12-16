@@ -20,10 +20,14 @@ function setupInvaders(invadersImage) {
       images: [invadersImage],
       frames: [
         // x, y, width, height, imageIndex*, regX*, regY*
-        [0, 0, 40, 24]
+        [0, 0, 40, 24],
+        [50, 0, 41, 29],
+        [100, 0, 41, 30],
+        [150, 0, 41, 29],
+        [200, 0, 41, 30]
       ],
       animations: {
-        move: [0]
+        move: [0, 4, 'move', 0.08]
       }
     }),
     create: function () {
@@ -146,7 +150,7 @@ function setupInvaders(invadersImage) {
         if (!(curWave && curWave.compCount)) return;
         var curDate = +new Date();
         var invaders = curWave.invaders;
-        
+
         invaders.forEach(function (invaderInfo) {
           // 生成敌机
           var data = invaderInfo._data;
